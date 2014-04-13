@@ -6,7 +6,11 @@ from random import randint
 class BaseClass(pygame.sprite.Sprite):
 
 	allsprites = pygame.sprite.Group()
+<<<<<<< HEAD
+	def __init__(self, x, y, image_string):
+=======
 	def __init__(self, x, y, width, height, image_string):
+>>>>>>> 4f0195ad3fb02ac92182a0e47cf230d165c647df
 		
 		pygame.sprite.Sprite.__init__(self)
 		BaseClass.allsprites.add(self)
@@ -16,9 +20,15 @@ class BaseClass(pygame.sprite.Sprite):
 		self.rect = self.image.get_rect()
 		self.rect.x = x
 		self.rect.y = y
+<<<<<<< HEAD
+		
+		self.rect.height
+
+=======
 
 		self.width = width
 		self.height = height
+>>>>>>> 4f0195ad3fb02ac92182a0e47cf230d165c647df
 
 	def destroy(self, ClassName):
 		
@@ -31,9 +41,15 @@ class Player(BaseClass):
 	List = pygame.sprite.Group()
 	going_right = True
 
+<<<<<<< HEAD
+	def __init__(self, x, y, image_string):
+		
+		BaseClass.__init__(self, x, y, image_string)
+=======
 	def __init__(self, x, y, width, height, image_string):
 		
 		BaseClass.__init__(self, x, y, width, height, image_string)
+>>>>>>> 4f0195ad3fb02ac92182a0e47cf230d165c647df
 		Player.List.add(self)
 		self.velx, self.vely = 0, 5 #The image will move 5 pixels every frame refresh
 		self.jumping, self.go_down = False, False #jumping needs to be true if image is going up or down and 
@@ -51,23 +67,40 @@ class Player(BaseClass):
 
 		if  predicted_locationx < 0:
 			self.velx = 0
+<<<<<<< HEAD
+		elif predicted_locationx + self.rect.width > SCREENWIDTH:
+			self.velx = 0
+		if predicted_locationy < 0:
+			self.vely = 0 
+		elif predicted_locationy + self.rect.height > SCREENHEIGHT:
+=======
 		elif predicted_locationx + self.width > SCREENWIDTH:
 			self.velx = 0
 		if predicted_locationy < 0:
 			self.vely = 0 
 		elif predicted_locationy + self.height > SCREENHEIGHT:
+>>>>>>> 4f0195ad3fb02ac92182a0e47cf230d165c647df
 			self.vely = 0 
 
 		#Stops the image from leaving the screen but has a little bounce back when 
 		#screen edge is reached
 		# if  self.rect.x < 0:
 		# 	self.rect.x = 0
+<<<<<<< HEAD
+		# elif self.rect.x + self.rect.width > SCREENWIDTH:
+		# 	self.rect.x = SCREENWIDTH - self.rect.width
+		# if self.rect.y < 0:
+		# 	self.rect.y = 0 
+		# elif self.rect.y + self.rect.height > SCREENHEIGHT:
+		# 	self.rect.y = SCREENHEIGHT - self.rect.height
+=======
 		# elif self.rect.x + self.width > SCREENWIDTH:
 		# 	self.rect.x = SCREENWIDTH - self.width
 		# if self.rect.y < 0:
 		# 	self.rect.y = 0 
 		# elif self.rect.y + self.height > SCREENHEIGHT:
 		# 	self.rect.y = SCREENHEIGHT - self.height
+>>>>>>> 4f0195ad3fb02ac92182a0e47cf230d165c647df
 
 		self.rect.x += self.velx
 		self.rect.y += self.vely
@@ -89,7 +122,11 @@ class Player(BaseClass):
 
 				predicted_locationy = self.rect.y + self.vely # helps to predict where the player is going to be next. 
 
+<<<<<<< HEAD
+				if predicted_locationy + self.rect.height > SCREENHEIGHT: #is it past our screen bottom
+=======
 				if predicted_locationy + self.height > SCREENHEIGHT: #is it past our screen bottom
+>>>>>>> 4f0195ad3fb02ac92182a0e47cf230d165c647df
 					self.jumping = False #Stops the jumping 
 					self.go_down = False #resets our going down varible
 
@@ -99,8 +136,13 @@ class Player(BaseClass):
 class Enemies(BaseClass):
 
 	List = pygame.sprite.Group()
+<<<<<<< HEAD
+	def __init__(self, x, y, image_string):
+		BaseClass.__init__(self, x, y, image_string)
+=======
 	def __init__(self, x, y, width, height, image_string):
 		BaseClass.__init__(self, x, y, width, height, image_string)
+>>>>>>> 4f0195ad3fb02ac92182a0e47cf230d165c647df
 		Enemies.List.add(self)
 		self.health = 100
 		self.half_health = self.health / 2.0
@@ -119,7 +161,11 @@ class Enemies(BaseClass):
 
 	def enemies(self, SCREENWIDTH):
 		#Keeps the enemy from being dropped outside the screen
+<<<<<<< HEAD
+		if self.rect.x + self.rect.width > SCREENWIDTH or self.rect.x < 0:
+=======
 		if self.rect.x + self.width > SCREENWIDTH or self.rect.x < 0:
+>>>>>>> 4f0195ad3fb02ac92182a0e47cf230d165c647df
 			self.image = pygame.transform.flip(self.image, True, False)
 			self.velx = -self.velx
 
@@ -140,7 +186,13 @@ class PlayerProjectile(pygame.sprite.Sprite):  #Extended with sprite which conta
 
 	normal_list = [] #Better to manipulate with than the List
 
+<<<<<<< HEAD
+	freeze = True
+	
+	def __init__(self, x, y, image_string):
+=======
 	def __init__(self, x, y, width, height, image_string):
+>>>>>>> 4f0195ad3fb02ac92182a0e47cf230d165c647df
 		
 		pygame.sprite.Sprite.__init__(self)
 		self.image = pygame.image.load(image_string)
@@ -149,14 +201,22 @@ class PlayerProjectile(pygame.sprite.Sprite):  #Extended with sprite which conta
 		self.rect.x = x
 		self.rect.y = y
 
+<<<<<<< HEAD
+
+=======
 		self.width = width
 		self.height = height
+>>>>>>> 4f0195ad3fb02ac92182a0e47cf230d165c647df
 
 		try:
 			last_element = PlayerProjectile.normal_list[-1]
 			difference = abs(self.rect.x - last_element.rect.x)
 
+<<<<<<< HEAD
+			if difference < self.rect.width : #spaces out the projectiles
+=======
 			if difference < self.width : #spaces out the projectiles
+>>>>>>> 4f0195ad3fb02ac92182a0e47cf230d165c647df
 				return
 
 		except Exception:

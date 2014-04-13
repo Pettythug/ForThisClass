@@ -9,6 +9,14 @@ def process(player, FPS, total_frames):
 			pygame.quit()#closes pygame
 			sys.exit()#system closes properly and allows the program to terminate
 
+<<<<<<< HEAD
+		if event.type == pygame.KEYDOWN:
+			if event.key == pygame.K_e:
+				classes.PlayerProjectile.freeze = not classes.PlayerProjectile.freeze
+
+
+=======
+>>>>>>> 4f0195ad3fb02ac92182a0e47cf230d165c647df
 	keys = pygame.key.get_pressed()
 
 	#Sets the a and d keys to move the image a moves left
@@ -39,6 +47,25 @@ def process(player, FPS, total_frames):
 
 
 	if keys[pygame.K_SPACE]:
+<<<<<<< HEAD
+
+
+		def direction():
+			if classes.Player.going_right:
+				p.velx = 8
+			else:
+				p.image = pygame.transform.flip(p.image, True, False)#flips the image when shooting the other direction
+				p.velx = -8
+		if (classes.PlayerProjectile.freeze):
+			p = classes.PlayerProjectile(player.rect.x, player.rect.y, "images/projectiles/snowball1.png")
+			direction()
+		else:
+			p = classes.PlayerProjectile(player.rect.x, player.rect.y, "images/projectiles/snowballFace.png")
+			direction()
+
+	
+	#classes.Enemies(640 - 40, 130, 26, 40, "images/enemie1flip.png")
+=======
 		p = classes.PlayerProjectile(player.rect.x, player.rect.y, 25, 25, "images/projectiles/red_dodge.png")
 		if classes.Player.going_right:
 			p.velx = 8
@@ -47,6 +74,7 @@ def process(player, FPS, total_frames):
 			p.velx = -8
 
 
+>>>>>>> 4f0195ad3fb02ac92182a0e47cf230d165c647df
 	spawn(FPS, total_frames) #calls the enemie so it spawns a new one according to the time.
 	collisions()
 
@@ -57,11 +85,19 @@ def spawn(FPS, total_frames):
 
 	if total_frames % sixty_seconds == 0:
 
+<<<<<<< HEAD
+	
+=======
+>>>>>>> 4f0195ad3fb02ac92182a0e47cf230d165c647df
 		r = random.randint(1,2)
 		x = 1
 		if r == 2:
 			x = 640 - 40
+<<<<<<< HEAD
+		classes.Enemies(x, 130, "images/enemie1flip.png")
+=======
 		classes.Enemies(x, 130, 26, 40, "images/enemie1flip.png")
+>>>>>>> 4f0195ad3fb02ac92182a0e47cf230d165c647df
 
 def collisions():
 
