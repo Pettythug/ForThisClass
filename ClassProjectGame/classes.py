@@ -6,11 +6,7 @@ from random import randint
 class BaseClass(pygame.sprite.Sprite):
 
 	allsprites = pygame.sprite.Group()
-<<<<<<< HEAD
 	def __init__(self, x, y, image_string):
-=======
-	def __init__(self, x, y, width, height, image_string):
->>>>>>> 4f0195ad3fb02ac92182a0e47cf230d165c647df
 		
 		pygame.sprite.Sprite.__init__(self)
 		BaseClass.allsprites.add(self)
@@ -20,15 +16,9 @@ class BaseClass(pygame.sprite.Sprite):
 		self.rect = self.image.get_rect()
 		self.rect.x = x
 		self.rect.y = y
-<<<<<<< HEAD
 		
 		self.rect.height
 
-=======
-
-		self.width = width
-		self.height = height
->>>>>>> 4f0195ad3fb02ac92182a0e47cf230d165c647df
 
 	def destroy(self, ClassName):
 		
@@ -41,15 +31,9 @@ class Player(BaseClass):
 	List = pygame.sprite.Group()
 	going_right = True
 
-<<<<<<< HEAD
 	def __init__(self, x, y, image_string):
 		
 		BaseClass.__init__(self, x, y, image_string)
-=======
-	def __init__(self, x, y, width, height, image_string):
-		
-		BaseClass.__init__(self, x, y, width, height, image_string)
->>>>>>> 4f0195ad3fb02ac92182a0e47cf230d165c647df
 		Player.List.add(self)
 		self.velx, self.vely = 0, 5 #The image will move 5 pixels every frame refresh
 		self.jumping, self.go_down = False, False #jumping needs to be true if image is going up or down and 
@@ -67,40 +51,23 @@ class Player(BaseClass):
 
 		if  predicted_locationx < 0:
 			self.velx = 0
-<<<<<<< HEAD
 		elif predicted_locationx + self.rect.width > SCREENWIDTH:
 			self.velx = 0
 		if predicted_locationy < 0:
 			self.vely = 0 
 		elif predicted_locationy + self.rect.height > SCREENHEIGHT:
-=======
-		elif predicted_locationx + self.width > SCREENWIDTH:
-			self.velx = 0
-		if predicted_locationy < 0:
-			self.vely = 0 
-		elif predicted_locationy + self.height > SCREENHEIGHT:
->>>>>>> 4f0195ad3fb02ac92182a0e47cf230d165c647df
 			self.vely = 0 
 
 		#Stops the image from leaving the screen but has a little bounce back when 
 		#screen edge is reached
 		# if  self.rect.x < 0:
 		# 	self.rect.x = 0
-<<<<<<< HEAD
 		# elif self.rect.x + self.rect.width > SCREENWIDTH:
 		# 	self.rect.x = SCREENWIDTH - self.rect.width
 		# if self.rect.y < 0:
 		# 	self.rect.y = 0 
 		# elif self.rect.y + self.rect.height > SCREENHEIGHT:
 		# 	self.rect.y = SCREENHEIGHT - self.rect.height
-=======
-		# elif self.rect.x + self.width > SCREENWIDTH:
-		# 	self.rect.x = SCREENWIDTH - self.width
-		# if self.rect.y < 0:
-		# 	self.rect.y = 0 
-		# elif self.rect.y + self.height > SCREENHEIGHT:
-		# 	self.rect.y = SCREENHEIGHT - self.height
->>>>>>> 4f0195ad3fb02ac92182a0e47cf230d165c647df
 
 		self.rect.x += self.velx
 		self.rect.y += self.vely
@@ -122,11 +89,7 @@ class Player(BaseClass):
 
 				predicted_locationy = self.rect.y + self.vely # helps to predict where the player is going to be next. 
 
-<<<<<<< HEAD
 				if predicted_locationy + self.rect.height > SCREENHEIGHT: #is it past our screen bottom
-=======
-				if predicted_locationy + self.height > SCREENHEIGHT: #is it past our screen bottom
->>>>>>> 4f0195ad3fb02ac92182a0e47cf230d165c647df
 					self.jumping = False #Stops the jumping 
 					self.go_down = False #resets our going down varible
 
@@ -136,36 +99,32 @@ class Player(BaseClass):
 class Enemies(BaseClass):
 
 	List = pygame.sprite.Group()
-<<<<<<< HEAD
 	def __init__(self, x, y, image_string):
 		BaseClass.__init__(self, x, y, image_string)
-=======
-	def __init__(self, x, y, width, height, image_string):
-		BaseClass.__init__(self, x, y, width, height, image_string)
->>>>>>> 4f0195ad3fb02ac92182a0e47cf230d165c647df
 		Enemies.List.add(self)
 		self.health = 100
-		self.half_health = self.health / 2.0
-		self.velx = randint(1, 4)
+		self.half_health = self.health ## / 2.0 will make it so you have to hit the enemy twice in order to kill it
+		self.velx, self.vely = randint(1, 4), 2
 		self.amplitude, self.period = randint(20, 140), randint(4, 5)/ 100.0
 
 	@staticmethod
-	def update_all(SCREENWIDTH):
+	def update_all(SCREENWIDTH, SCREENHEIGHT):
 		
 		for enemies in Enemies.List:
 
-			enemies.enemies(SCREENWIDTH)
+			if enemies.health <= 0: # if our enemies is dead
+				if enemies.rect.y + enemies.rect.height < SCREENHEIGHT: # check to see if it is still above the bottom 
+					enemies.rect.y += enemies.vely # if true it drops down
+			else:
+				enemies.enemies(SCREENWIDTH) # if false it continues to move.
 
-			if enemies.health <= 0:
-				enemies.destroy(Enemies)
+			
+			# if enemies.health <= 0: #destorys the enemie if the health is less than or eaqual to zero
+			# 	enemies.destroy(Enemies)
 
 	def enemies(self, SCREENWIDTH):
 		#Keeps the enemy from being dropped outside the screen
-<<<<<<< HEAD
 		if self.rect.x + self.rect.width > SCREENWIDTH or self.rect.x < 0:
-=======
-		if self.rect.x + self.width > SCREENWIDTH or self.rect.x < 0:
->>>>>>> 4f0195ad3fb02ac92182a0e47cf230d165c647df
 			self.image = pygame.transform.flip(self.image, True, False)
 			self.velx = -self.velx
 
@@ -186,13 +145,9 @@ class PlayerProjectile(pygame.sprite.Sprite):  #Extended with sprite which conta
 
 	normal_list = [] #Better to manipulate with than the List
 
-<<<<<<< HEAD
 	freeze = True
 	
-	def __init__(self, x, y, image_string):
-=======
-	def __init__(self, x, y, width, height, image_string):
->>>>>>> 4f0195ad3fb02ac92182a0e47cf230d165c647df
+	def __init__(self, x, y, if_this_variable_is_true_then_freeze, image_string):
 		
 		pygame.sprite.Sprite.__init__(self)
 		self.image = pygame.image.load(image_string)
@@ -200,23 +155,14 @@ class PlayerProjectile(pygame.sprite.Sprite):  #Extended with sprite which conta
 		self.rect = self.image.get_rect()
 		self.rect.x = x
 		self.rect.y = y
+		self.if_this_variable_is_true_then_freeze = if_this_variable_is_true_then_freeze
 
-<<<<<<< HEAD
-
-=======
-		self.width = width
-		self.height = height
->>>>>>> 4f0195ad3fb02ac92182a0e47cf230d165c647df
 
 		try:
 			last_element = PlayerProjectile.normal_list[-1]
 			difference = abs(self.rect.x - last_element.rect.x)
 
-<<<<<<< HEAD
-			if difference < self.rect.width : #spaces out the projectiles
-=======
-			if difference < self.width : #spaces out the projectiles
->>>>>>> 4f0195ad3fb02ac92182a0e47cf230d165c647df
+			if difference < self.rect.width  * 45: #spaces out the projectiles
 				return
 
 		except Exception:
@@ -234,3 +180,7 @@ class PlayerProjectile(pygame.sprite.Sprite):  #Extended with sprite which conta
 					projectile.rect.x += projectile.velx
 
 
+	def destroy(self):
+		PlayerProjectile.List.remove(self)
+		PlayerProjectile.normal_list.remove(self)
+		del self

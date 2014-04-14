@@ -9,14 +9,11 @@ def process(player, FPS, total_frames):
 			pygame.quit()#closes pygame
 			sys.exit()#system closes properly and allows the program to terminate
 
-<<<<<<< HEAD
 		if event.type == pygame.KEYDOWN:
 			if event.key == pygame.K_e:
 				classes.PlayerProjectile.freeze = not classes.PlayerProjectile.freeze
 
 
-=======
->>>>>>> 4f0195ad3fb02ac92182a0e47cf230d165c647df
 	keys = pygame.key.get_pressed()
 
 	#Sets the a and d keys to move the image a moves left
@@ -47,7 +44,6 @@ def process(player, FPS, total_frames):
 
 
 	if keys[pygame.K_SPACE]:
-<<<<<<< HEAD
 
 
 		def direction():
@@ -57,24 +53,14 @@ def process(player, FPS, total_frames):
 				p.image = pygame.transform.flip(p.image, True, False)#flips the image when shooting the other direction
 				p.velx = -8
 		if (classes.PlayerProjectile.freeze):
-			p = classes.PlayerProjectile(player.rect.x, player.rect.y, "images/projectiles/snowball1.png")
+			p = classes.PlayerProjectile(player.rect.x, player.rect.y, True, "images/projectiles/snowball1.png")
 			direction()
 		else:
-			p = classes.PlayerProjectile(player.rect.x, player.rect.y, "images/projectiles/snowballFace.png")
+			p = classes.PlayerProjectile(player.rect.x, player.rect.y, False, "images/projectiles/snowballFace.png")
 			direction()
 
 	
 	#classes.Enemies(640 - 40, 130, 26, 40, "images/enemie1flip.png")
-=======
-		p = classes.PlayerProjectile(player.rect.x, player.rect.y, 25, 25, "images/projectiles/red_dodge.png")
-		if classes.Player.going_right:
-			p.velx = 8
-		else:
-			p.image = pygame.transform.flip(p.image, True, False)#flips the image when shooting the other direction
-			p.velx = -8
-
-
->>>>>>> 4f0195ad3fb02ac92182a0e47cf230d165c647df
 	spawn(FPS, total_frames) #calls the enemie so it spawns a new one according to the time.
 	collisions()
 
@@ -85,34 +71,65 @@ def spawn(FPS, total_frames):
 
 	if total_frames % sixty_seconds == 0:
 
-<<<<<<< HEAD
 	
-=======
->>>>>>> 4f0195ad3fb02ac92182a0e47cf230d165c647df
 		r = random.randint(1,2)
 		x = 1
 		if r == 2:
 			x = 640 - 40
-<<<<<<< HEAD
-		classes.Enemies(x, 130, "images/enemie1flip.png")
-=======
-		classes.Enemies(x, 130, 26, 40, "images/enemie1flip.png")
->>>>>>> 4f0195ad3fb02ac92182a0e47cf230d165c647df
+		classes.Enemies(x, 130, "images/enemie1.png")
 
 def collisions():
 
+	#Freeze enemies
+	#widthpx projectiles
+
+
 	#pygame.sprite.groupcollide(G1, G2, dokill, dokill) # this takes the first group(G1) and second group(G2) and when they collide it asks if you want to remove the first one (dokill) and do you want to remove the second one (dokill). 
+	# for enemies in classes.Enemies.List:
+	# # 	enemies_proj = pygame.sprite.spritecollide(enemies, classes.PlayerProjectile.List, True)	
+	# # 	if len(enemies_proj) > 0:
+	# # 		for hit in enemies_proj:
+	# # 			enemies.health -= enemies.half_health
+
+	# 	if pygame.sprite.spritecollide(enemies, classes.PlayerProjectile.List, False):
+
+	# 		if classes.PlayerProjectile.freeze:
+	# 			enemies.health -= enemies.half_health
+	# 		else:
+	# 			enemies.velx = 0
+	# 			# enemies.image = "some image" put something here if I find a good frozen pic for the enemie
+
+	# for proj in classes.PlayerProjectile.List:
+
+	# 	if pygame.sprite.spritecollide(proj, classes.Enemies.List, False):
+
+	# 		proj.rect.x = 2 * -proj.rect.width
+	# 		proj.destroy()
+
 	for enemies in classes.Enemies.List:
-		enemies_proj = pygame.sprite.spritecollide(enemies, classes.PlayerProjectile.List, True)	
-		if len(enemies_proj) > 0:
-			for hit in enemies_proj:
-				enemies.health -= enemies.half_health
+
+		projectiles = pygame.sprite.spritecollide(enemies, classes.PlayerProjectile.List, True) # when a player projectile collides with a enemy it returns the projectiles in the projectiles list
+
+		for projectile in projectiles:
 
 
+			enemies.health = 0
+		
+			if projectile.if_this_variable_is_true_then_freeze:
 
+				enemies.image = image = pygame.image.load("images/snowman2.png") # regular snowball
 
+			else:
 
+				if enemies.velx > 0: # is dead
+					enemies.velx = 0 # enemies is now paralysed
+					enemies.image = pygame.image.load("images/snowman3.png") # freeze snowball
+				elif enemies.velx < 0:
+					enemies.image = pygame.image.load("images/snowman3.png")
+					enemies.image = pygame.transform.flip(enemies.image, True, False)
 
+			projectile.rect.x = 2 * -projectile.rect.width
+			projectile.destroy()
 
 
 
