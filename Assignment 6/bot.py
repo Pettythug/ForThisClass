@@ -1,71 +1,99 @@
+"""
+The Client is slave: 
+- it sends only the player inputs to the server.
+- every frame, it displays the server's last received data
+Pros: the server is the only component with game logic, 
+so all clients see the same game at the same time (consistency, no rollbacks).
+Cons: lag between player input and screen display (one round-trip).
+But the client can smooth the lag by interpolating the position of the boxes. 
+"""
+from network import Handler, poll
+
+from pygame import Rect, init as init_pygame
+from pygame.display import set_mode, update as update_pygame_display
+from pygame.draw import rect as draw_rect
+from pygame.event import get as get_pygame_events
+from pygame.locals import KEYDOWN, QUIT, K_ESCAPE, K_UP, K_DOWN, K_LEFT, K_RIGHT
+from pygame.time import Clock
 
 
-################### CONTROLLER #############################
+borders = []
+pellets = []
+players = {}  # map player name to rectangle
+myname = None
+check = False
+   
+init_pygame()
+screen = set_mode((400, 300))
+clock = Clock()
 
-import pygame
-from pygame.locals import KEYDOWN, QUIT, K_ESCAPE
-from common import *
-
-class Controller():
-    def __init__(self, m):
-        self.m = m
-        pygame.init()
+def make_rect(quad):  # make a pygame.Rect from a list of 4 integers
+    x, y, w, h = quad
+    return Rect(x, y, w, h)
     
-    def poll(self):
-        cmd = ''
-        for event in pygame.event.get(): # inputs
-            if event.type == QUIT:
-                cmd = 'quit'
-            if event.type == KEYDOWN:
-                key = event.key
-                if key == K_ESCAPE:
-                    cmd = 'quit'
+class Client(Handler):
             
-        if (cmd != 'quit'):
-            cmd = choice(['up', 'down', 'left', 'right'])
+    def on_open(self):
+        print "You are connected"
+        
+    def on_close(self):
+        print "you are disconnected from the server"
+        
+    def on_msg(self, data): 
                 
-        if cmd:
-            self.m.do_cmd(cmd)
-
-################### VIEW #############################
-
-class View():
-    count = 50
-    def __init__(self, m):
-        self.m = m
-        pygame.init()
-        self.screen = pygame.display.set_mode((400, 300))
+        global borders, pellets, players, myname
+        if not myname == None:
+            x1,y1,w1,h1 = players[myname]
+            listPlayer = data['players']
+            x2,y2,w2,h2 = listPlayer[myname]
+            if not w1 == w2 and not h1 == h2:
+                print "Pellet Eaten"
         
-    def display(self):
-        if (v.count > 50):
-            screen = self.screen
-            borders = [pygame.Rect(b[0], b[1], b[2], b[3]) for b in self.m.borders]
-            pellets = [pygame.Rect(p[0], p[1], p[2], p[3]) for p in self.m.pellets]
-            b = self.m.mybox
-            myrect = pygame.Rect(b[0], b[1], b[2], b[3])
-            screen.fill((0, 0, 64))  # dark blue
-            pygame.draw.rect(screen, (0, 191, 255), myrect)  # Deep Sky Blue
-            [pygame.draw.rect(screen, (255, 192, 203), p) for p in pellets]  # pink
-            [pygame.draw.rect(screen, (0, 191, 255), b) for b in borders]  # red
-            
-            pygame.display.update()
-            v.count = 0
-        v.count += 1
+        borders = [make_rect(b) for b in data['borders']]                   
+        pellets = [make_rect(p) for p in data['pellets']]
+        players = {name: make_rect(p) for name, p in data['players'].items()}
+        myname = data['myname']        
+
+        
+
+def collide_boxes(box1, box2):
+    x1, y1, w1, h1 = box1
+    x2, y2, w2, h2 = box2
+    return x1 < x2 + w2 and y1 < y2 + h2 and x2 < x1 + w1 and y2 < y1 + h1
     
-################### LOOP #############################
-
-model = Model()
-c = Controller(model)
-v = View(model)
-
-
-
        
+client = Client('localhost', 8888)  # connect asynchronously
+poll()  # push and pull network messages
 
-        
-while not model.game_over:
+valid_inputs = {K_UP: 'up', K_DOWN: 'down', K_LEFT: 'left', K_RIGHT: 'right'}
 
-    sleep(0.02)
-    c.poll()
-    model.update()
-    v.display()
+while 1:
+    
+    poll()  # push and pull network messages
+    
+    # send valid inputs to the server
+   
+    for event in get_pygame_events():  
+        if event.type == QUIT:
+            exit()
+        if event.type == KEYDOWN:
+            key = event.key
+            if key == K_ESCAPE:
+                exit()
+            elif key in valid_inputs:               
+                msg = {'input': valid_inputs[key]}
+                client.do_send(msg)
+    
+    # draw everything
+    screen.fill((0, 0, 64))  # dark blue
+    [draw_rect(screen, (0, 191, 255), b) for b in borders]  # deep sky blue 
+    [draw_rect(screen, (255, 192, 203), p) for p in pellets]  # shrimp
+    for name, p in players.items():
+        if name != myname:
+            draw_rect(screen, (255, 0, 0), p)  # red
+    if myname:        
+        draw_rect(screen, (0, 191, 255), players[myname])  # deep sky blue
+    
+    update_pygame_display()
+    
+    clock.tick(50)  # frames per second, independent of server frame rate
