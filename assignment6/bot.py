@@ -46,7 +46,7 @@ class Client(Handler):
             x1,y1,w1,h1 = players[myname]
             listPlayer = data['players']
             x2,y2,w2,h2 = listPlayer[myname]
-            if not w1 == w2 and not h1 == h2:
+            if w1 < w2 and  h1 < h2:
                 print "Pellet Eaten"
         
         borders = [make_rect(b) for b in data['borders']]                   
