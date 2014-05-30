@@ -46,12 +46,13 @@ class MyHandler(Handler):
                 elif x.startswith("#") and personal == False and check == True:
                     count = 0
                     check = False
-                    for word in subs:
-                        for value in subs.get(word):
-                            for h in handlers:
-                                if value in handlers.get(h):
-                                    if h != self:
+                    while not check:                       
+                        if word in subs:
+                            for value in subs.get(word):
+                                for h in handlers:
+                                    if value in handlers.get(h) and value != self:
                                         h.do_send(msg)
+                                        check = True
                                                                    
                 elif x.startswith('-') and personal == False: 
                     count = 0  
