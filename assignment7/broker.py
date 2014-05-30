@@ -64,8 +64,8 @@ class MyHandler(Handler):
                             
                 elif x.startswith("@"):
                     for h in handlers:
-                        for j in handlers.get(h):
-                            if x == j:
+                        if word in handlers.get(h):
+                            if h != self:
                                 h.do_send(msg) 
                                 check = False 
                                 personal == True 
